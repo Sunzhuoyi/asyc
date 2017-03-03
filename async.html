@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script>
+    for (var i = 0; i < 5; i++){
+       console.log(i);
+        setTimeout(
+                function () {
+                    console.log(i);
+                },1000* i)
+    }
+    //结果为先输出0，1，2，3，4，5，然后每隔一秒输出一个5，总共5个5
+    for ( var i = 0; i< 5; i++) {
+        ( function (i) {
+           setTimeout(function () {
+               console.log(i);
+           },i*1000);
+        })(i)
+    }
+    //结果为先输出0，1，2，3，4，5,使用了闭包
+   for ( var i = 0; i< 5; i++) {
+       ( function () {
+           setTimeout(function () {
+               console.log(i);
+           },i*1000);
+       })(i)
+   }
+   //结果为先输出5，5，5，5，5，5,使用了闭包
+    for (var i = 0; i < 5; i++) {
+        setTimeout(
+                (function (i) {
+                    console.log(i)
+                })(i),i*1000
+        )
+    }
+//给setTimeout传递 一个立即执行函数，setTimeout可以接受函数或者字符串作为参数，这里的立即执行函数是个undefined,等价于setTimeout(undefined,...);而立即执行函数会立即执行，所以是立马输出0，1，2，3，4
+    setTimeout(function () {
+       console.log(1)
+    },0)
+    new Promise(function executor(resolve) {
+        console.log(2);
+        for( var i=0; i< 10000; i++ ){
+            i == 9999 && resolve();
+        }
+        console.log(3);
+    }).then(function () {
+        console.log(4);
+    });
+    console.log(5)
+//答案，2，3，5，4，1。setTimeout和then()为异步所以放在最后执行，setTimeout()设置定时器以调度下一个事件循环（无法将回调直接加入事件循环队列）Promise的then在当前tick(事件循环的每一轮称为tick)执行，所以比在下一个轮询的setTimeout()先执行
+
+</script>
+</html>
